@@ -37,13 +37,16 @@ class Dohna(Tk.Tk):
         Tk.Label(self.talentframe, text="Image").grid(row=0, column=0)
         self.t_image = Tk.Text(self.talentframe, height = 1, width = 20)
         self.t_image.grid(row=0, column=1, columnspan=2, sticky="we")
+        self.t_image.bind('<Return>', self.newline)
         Tk.Button(self.talentframe, text="Select", command=self.i_open).grid(row=0, column=3, sticky="we")
         Tk.Label(self.talentframe, text="First Name").grid(row=1, column=0)
         self.t_fn = Tk.Text(self.talentframe, height = 1, width = 11)
         self.t_fn.grid(row=1, column=1, sticky="we")
+        self.t_fn.bind('<Return>', self.newline)
         Tk.Label(self.talentframe, text="Last Name").grid(row=1, column=2)
         self.t_ln = Tk.Text(self.talentframe, height = 1, width = 11)
         self.t_ln.grid(row=1, column=3, sticky="we")
+        self.t_ln.bind('<Return>', self.newline)
         Tk.Label(self.talentframe, text="Last Name").grid(row=1, column=2)
         Tk.Label(self.talentframe, text="Stats").grid(row=2, column=0)
         self.tv_s = []
@@ -72,6 +75,7 @@ class Dohna(Tk.Tk):
         for i in range(3):
             self.t_bio.append(Tk.Text(self.talentframe, height = 1, width = 40))
             self.t_bio[-1].grid(row=5+i, column=1, columnspan=3)
+            self.t_bio[-1].bind('<Return>', self.newline)
         
         # client
         self.clientframe = ttk.Frame(self)
@@ -79,13 +83,16 @@ class Dohna(Tk.Tk):
         Tk.Label(self.clientframe, text="Image").grid(row=0, column=0)
         self.c_image = Tk.Text(self.clientframe, height = 1, width = 20)
         self.c_image.grid(row=0, column=1, columnspan=2, sticky="we")
+        self.c_image.bind('<Return>', self.newline)
         Tk.Button(self.clientframe, text="Select", command=self.i_open).grid(row=0, column=3, sticky="we")
         Tk.Label(self.clientframe, text="First Name").grid(row=1, column=0)
         self.c_fn = Tk.Text(self.clientframe, height = 1, width = 11)
         self.c_fn.grid(row=1, column=1, sticky="we")
+        self.c_fn.bind('<Return>', self.newline)
         Tk.Label(self.clientframe, text="Last Name").grid(row=1, column=2)
         self.c_ln = Tk.Text(self.clientframe, height = 1, width = 11)
         self.c_ln.grid(row=1, column=3, sticky="we")
+        self.c_ln.bind('<Return>', self.newline)
         Tk.Label(self.clientframe, text="Last Name").grid(row=1, column=2)
         Tk.Label(self.clientframe, text="Income").grid(row=2, column=0)
         self.cv_i = Tk.StringVar(value="Random")
@@ -110,6 +117,7 @@ class Dohna(Tk.Tk):
         for i in range(2):
             self.c_bio.append(Tk.Text(self.clientframe, height = 1, width = 24))
             self.c_bio[-1].grid(row=5+i, column=1, columnspan=3, sticky="w")
+            self.c_bio[-1].bind('<Return>', self.newline)
 
         self.setChildrenState(self.talentframe.winfo_children(), "disabled")
         self.setChildrenState(self.clientframe.winfo_children(), "disabled")
@@ -248,9 +256,9 @@ class Dohna(Tk.Tk):
                         return False
                     self.tv_t[i].set(v[i])
             if 'VIRGIN' in chara:
-                self.tv_virgin.set("YES" if chara['VIRGIN'] == '1' else "NO")
-            if 'VOICES' in chara:
-                if chara['VOICES'] not in self.voices:
+                self.tv_virgin.set("Yes" if chara['VIRGIN'] == '1' else "No")
+            if 'VOICE' in chara:
+                if chara['VOICE'] not in self.voices:
                     messagebox.showerror(title="Error parsing file", message='Invalid VOICE "{}"'.format(chara['VOICE']))
                     return False
                 self.tv_v.set(chara['VOICE'])
@@ -391,6 +399,7 @@ class Dohna(Tk.Tk):
 
     def i_open(self):
         filename = fd.askopenfilename(title='Open an Image', initialdir=pathlib.Path().resolve(), filetypes=(('image files', '*.png'),('image files', '*.png')))
+        if filename == "": return
         if self.dtype == 'TALENT':
             self.t_image.delete(1.0, Tk.END)
             self.t_image.insert(Tk.END, filename)
@@ -398,5 +407,8 @@ class Dohna(Tk.Tk):
             self.c_image.delete(1.0, Tk.END)
             self.c_image.insert(Tk.END, filename)
 
+    def newline(self, event):
+        return 'break'
+
 if __name__ == "__main__":
-    Dohna("1.0").run()
+    Dohna("1.1").run()
